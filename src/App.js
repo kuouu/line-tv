@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { ChakraProvider, CSSReset } from '@chakra-ui/react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components'
+
+import Sidebar from './views/Sidebar';
+import Login from './views/Login';
+import StoreInfo from './views/StoreInfo';
+import Dashboard from './views/Dashboard';
+import BotEditor from './views/BotEditor';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <CSSReset />
+      <BrowserRouter>
+        <Container>
+          <Sidebar />
+          <MainSection>
+            <Switch>
+              <Redirect exact from="/" to="/dashboard" />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/storeinfo" component={StoreInfo} />
+              <Route exact path="/boteditor" component={BotEditor} />
+            </Switch>
+          </MainSection>
+        </Container>
+      </BrowserRouter>
+    </ChakraProvider>
   );
 }
 
 export default App;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  min-height: 100vh;
+`
+
+const MainSection = styled.div`
+  height: 100vh;
+`
