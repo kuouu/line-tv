@@ -43,7 +43,9 @@ const Container = styled.div`
 `
 
 const MainSection = styled.div`
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   flex-grow: 1;
   background-color: #f6f8fa;
 `
