@@ -76,7 +76,7 @@ const data = [
 ]
 
 export default function ReplyStat() {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState();
   const handleOnChange = (e) => {
     setSelected(e.target.value);
   }
