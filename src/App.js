@@ -8,6 +8,7 @@ import Login from './views/Login';
 import StoreInfo from './views/StoreInfo';
 import Dashboard from './views/Dashboard';
 import BotEditor from './views/BotEditor';
+import Navbar from './views/Navbar';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Container>
           <Sidebar />
           <MainSection>
+            <Navbar />
             <Switch>
               <Redirect exact from="/" to="/dashboard" />
               <Route exact path="/login" component={Login} />
@@ -42,4 +44,6 @@ const Container = styled.div`
 
 const MainSection = styled.div`
   height: 100vh;
+  flex-grow: 1;
+  background-color: #f6f8fa;
 `
