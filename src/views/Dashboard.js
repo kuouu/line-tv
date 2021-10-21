@@ -11,9 +11,10 @@ export default function Dashboard() {
       py={5}
       flexGrow={1}
       direction='column'
+      justify='space-between'
     >
       <KeyNumber />
-      <Flex>
+      <Flex mt={5} justify='space-between'>
         <CustomerChart />
         <ReplyStat />
       </Flex>
