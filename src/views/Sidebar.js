@@ -1,19 +1,35 @@
 import React from 'react'
-import { Stack, Box } from '@chakra-ui/layout'
-import { useHistory } from "react-router-dom";
+import { Stack, Text, Flex } from '@chakra-ui/layout'
+import styled from 'styled-components';
+import { Link } from "react-router-dom";
+import { MdOutlineLiveTv } from "react-icons/md";
 
 export default function Sidebar() {
-  const history = useHistory();
-  const handleClick = (route) => {
-    history.push(route);
-  }
 
   return (
-    <Stack w='200px' p='20px'>
-      <Box onClick={ ()=>handleClick('./') }>Line TV</Box>
-      <Box onClick={ ()=>handleClick('./dashboard') }>Dashboard</Box>
-      <Box onClick={ ()=>handleClick('./storeinfo') }>Store Info</Box>
-      <Box onClick={ ()=>handleClick('./boteditor') }>Bot Editor</Box>
+    <Stack w='200px' p='20px' color="white" backgroundColor='#282c34' spacing={3}>
+      <Link to='/'>
+        <Flex align='center'>
+          <MdOutlineLiveTv fontSize='1.5rem'/>
+          <LogoText>Line TV</LogoText>
+        </Flex>
+      </Link>
+
+      <LinkText to='./dashboard'>Dashboard</LinkText>
+      <LinkText to='./storeinfo'>Store Info</LinkText>
+      <LinkText to='./boteditor'>Bot Editor</LinkText>
     </Stack>
   )
 }
+
+const LogoText = styled(Text)`
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+`
+
+const LinkText = styled(Link)`
+  :hover{
+    color: #61dafb;
+  }
+`
