@@ -11,7 +11,7 @@ export default function Description() {
       flexGrow={1}
     >
       <Text>Description:</Text>
-      <Textarea h='100%' resize='none'/>
+      <Textarea h='100%' resize='none' placeholder='introduce your place...'/>
     </Stack>
   )
 }

@@ -10,6 +10,7 @@ export default function StoreInfo() {
       px={10}
       py={5}
       flexGrow={1}
+      spacing={8}
     >
       <StoreName />
       <Infomation />
