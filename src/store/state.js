@@ -22,7 +22,30 @@ const state = [
             edgeTo: "node_2"
           }
         ]
-      }
+      },
+      // {
+      //   type: "carousel",
+      //   content: [
+      //     {
+      //       url: "https://...",
+      //       buttons: [
+      //         {
+      //           text: "test",
+      //           edgeTo: "node_3"
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       url: "https://...",
+      //       buttons: [
+      //         {
+      //           text: "test",
+      //           edgeTo: "node_4"
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // }
     ]
   }
 ];

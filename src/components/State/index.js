@@ -31,14 +31,17 @@ import { BiCarousel } from "react-icons/bi"
 import { MdOutlineDragIndicator } from "react-icons/md"
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Handle } from 'react-flow-renderer';
 
 import MessageSection, { MessageTypeMap } from "../Message";
 import states from '../../store/state';
 
-const State = ({id, onDelete}) => {
+const State = ({data}) => {
+  const { id, onDelete } = data;
   let stateData = states.find(s => s.id === id);
   const [sections, setSections] = useState(stateData?.sections || []);
   const [title, setTitle] = useState(stateData?.title || "");
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onDragEnd = (res) => {
@@ -56,7 +59,8 @@ const State = ({id, onDelete}) => {
   }
 
   return (
-    <>
+    <div style={{border: "1px #000 solid", borderRadius: "4px", padding: "2px"}}>
+      <Handle type="target" position="left"/>
       <VStack onClick={onOpen}>
         <Flex width="100%" alignItems="center">
           <Box padding="0 8px">{title}</Box>
@@ -65,7 +69,14 @@ const State = ({id, onDelete}) => {
             onDelete(id);
           }} />
         </Flex>
-        {/* {sections.map((s, idx) => <Box key={idx}>{s.type}</Box>)} */}
+        {sections.map((s, idx) => {
+          return (
+            <Box key={idx} style={{ width: "100%", position: "relative", textAlign: "center" }} >
+              {s.type}
+              <Handle type="source" id={idx} position="right" style={{top: "50%"}} />
+            </Box>
+          )
+        })}
       </VStack>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -156,7 +167,7 @@ const State = ({id, onDelete}) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   )
 }
 
