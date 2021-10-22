@@ -11,7 +11,7 @@ export default function Sidebar() {
       <Link to='/'>
         <Flex align='center'>
           <MdOutlineLiveTv fontSize='1.5rem'/>
-          <LogoText>Line TV</LogoText>
+          <LogoText>Line MO</LogoText>
         </Flex>
       </Link>
 
