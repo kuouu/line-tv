@@ -1,0 +1,11 @@
+.edge-button {
+  opacity: 0;
+  color: #000;
+  border: 1px solid #fff;
+  transition: 0.1s;
+}
+
+foreignObject:hover .edge-button {
+  opacity: 1;
+  cursor: pointer;
+}

@@ -48,4 +48,6 @@ const MainSection = styled.div`
   min-height: 100vh;
   flex-grow: 1;
   background-color: #f6f8fa;
+  width: calc(100vw - 200px);
+  height: 100vh;
 `
