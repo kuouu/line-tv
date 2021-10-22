@@ -41,5 +41,6 @@ const Container = styled.div`
 `
 
 const MainSection = styled.div`
+  width: calc(100vw - 200px);
   height: 100vh;
 `
