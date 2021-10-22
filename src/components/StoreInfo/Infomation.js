@@ -63,7 +63,7 @@ export default function Infomation() {
         <Input onBlur={handleOnBlur} onKeyPress={handleEnter} />
         <Flex wrap='wrap'>
           {tags.map(tag => <Tag m='5px' colorScheme='cyan' key={tag}>
-            {tag}
+            <Text isTruncated>{tag}</Text>
             <TagCloseButton onClick={() => deleteTag(tag)} />
           </Tag>)
           }
