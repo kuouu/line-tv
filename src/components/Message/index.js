@@ -34,7 +34,7 @@ const MessageSection = ({data, idx, onEdit, onEditSection}) => {
       )    
     }
     default: {
-      
+      return null;
     }
   }
 }

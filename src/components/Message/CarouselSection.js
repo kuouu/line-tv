@@ -7,7 +7,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
   const contents = data.content;
   const ImagePlaceHolder = () => <Flex
     minW='300px'
-    h='100%'
+    h='300px'
     justify='center'
     align='center'
     bgColor='rgba(255, 255, 255, 0.5)'
@@ -37,7 +37,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
     </label>
   </Flex>
   return (
-    <HStack h='300px' overflowX='scroll' spacing={10}>
+    <HStack h={contents.length !== 0 || onEdit ? '300px' : '0'} overflowX='scroll' spacing={10}>
       {contents && contents.map((content, index) => <Stack
         key={content.url}
         minW='300px'
@@ -56,7 +56,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
           id={`imgupload_${index}`}
           onChange={async e => {
             const newUrl = await upload(e.target.files[0]);
-            const urls = data.content.map((e, idx) => idx===index? newUrl : e.url);
+            const urls = data.content.map((e, idx) => idx === index ? newUrl : e.url);
             const newContent = contents.map((content, idx) => ({ ...content, url: urls[idx] }));
             editHandler(["content"], [newContent]);
           }} />}

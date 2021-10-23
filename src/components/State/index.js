@@ -47,7 +47,7 @@ const SectionTemplates = {
     buttons: []
   },
   "carousel": {
-    type: "",
+    type: "carousel",
     content: []
   }
 }
@@ -127,6 +127,18 @@ const State = ({ data }) => {
                 return (
                   <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
                     {b.text}
+                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{ top: "50%" }} />
+                  </Box>
+                )
+              })
+            ])
+          } else if (s.content) {
+            return ([
+              <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
+              ...s.content.map((b, b_idx) => {
+                return (
+                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
+                    {b.buttons[0].text}
                     <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{ top: "50%" }} />
                   </Box>
                 )
