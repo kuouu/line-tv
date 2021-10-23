@@ -36,12 +36,10 @@ const Panel = () => {
     getData();
   }, [])
   
-  const onGlobalSave = async () => {
-    Promise.all(
-      stateData.forEach(async sd => {
-        await postFSM(sd.id, sd);
-      })  
-    )
+  const onGlobalSave = () => {
+    stateData.forEach(sd => {
+      postFSM(sd.id, sd);
+    })
   }
 
   const onConnect = (params) => {
