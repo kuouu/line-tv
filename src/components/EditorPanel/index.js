@@ -30,22 +30,45 @@ const Panel = () => {
     let sectionIdx = params.sourceHandle.split('_')[0];
     let buttonIdx = params.sourceHandle.split('_')[1];
 
-    setElements((els) => 
-      addEdge({ 
+    setElements((els) => {
+      console.log(params);
+      return addEdge({ 
         ...params, 
         type: 'button', 
         data: {onDelete: deleteElementById} 
       }, els)
-    );
+    });
 
     let newStateData = stateData;
     stateData.forEach((s, idx, arr) => {
       if (s.id === params.source) {
-        arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = params.target;
+        if (s.type === "text" && s.buttons) {
+          arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = params.target;
+        } else if (s.type === "carousel") {
+          arr[idx].sections[sectionIdx].content[buttonIdx].buttons[0].edgeTo = params.target;
+        }
       }
     });
 
     setStateData(newStateData);
+  }
+
+  const onEdgeUpdate = (oldEdge, newConnection) => {
+    let sectionIdx = newConnection.sourceHandle.split('_')[0];
+    let buttonIdx = newConnection.sourceHandle.split('_')[1];
+    let newStateData = stateData;
+    stateData.forEach((s, idx, arr) => {
+      if (s.id === newConnection.source) {
+        if (s.type === "text" && s.buttons) {
+          arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = newConnection.target;
+        } else if (s.type === "carousel") {
+          arr[idx].sections[sectionIdx].content[buttonIdx].buttons[0].edgeTo = newConnection.target;
+        }
+      }
+    });
+    setStateData(newStateData);
+    console.log(newStateData);
+    setElements((els) => updateEdge(oldEdge, newConnection, els));
   }
   
   const onDragOver = (event) => {
@@ -98,11 +121,14 @@ const Panel = () => {
   const deleteElementById = useCallback(
     (id) => setElements((els) => {
       const targetElement = els.filter(e => e.id === id);
+      stateData.splice(stateData.findIndex(s => s.id === id), 1);
+      setStateData(stateData);
+
       const edges = reactFlowInstance.getElements().filter(e => isEdge(e));
       const connectedEdges = getConnectedEdges(targetElement, edges);        
       return removeElements([...targetElement, ...connectedEdges], els);
     }),
-    [reactFlowInstance],
+    [reactFlowInstance, stateData],
   )
 
   useEffect(() => {
@@ -126,6 +152,49 @@ const Panel = () => {
         }
       }
     }));
+
+    stateData.forEach(s => {
+      if (s.sections) {
+        s.sections.forEach((se, se_idx) => {
+          if (se.type === "text" && se.buttons) {
+            se.buttons.forEach((b, b_idx) => {
+              let params = {
+                source: s.id,
+                sourceHandle: `${se_idx}_${b_idx}`,
+                target: b.edgeTo,
+                targetHandle: null
+              }
+              // console.log(params);
+              setElements((els) => {
+                return addEdge({ 
+                  ...params,
+                  type: 'button', 
+                  data: {onDelete: deleteElementById} 
+                }, els)
+              });
+            })
+          } else if (se.type === "carousel") {
+            se.content.forEach((c, c_idx) => {
+              if (c.buttons[0].edgeTo !== " ") {
+                let params = {
+                  source: s.id,
+                  sourceHandle: `${se_idx}_${c_idx}`,
+                  target: c.buttons[0].edgeTo,
+                  targetHandle: null
+                }
+                setElements((els) => {
+                  return addEdge({ 
+                    ...params,
+                    type: 'button', 
+                    data: {onDelete: deleteElementById} 
+                  }, els)
+                });  
+              }
+            })
+          }    
+        });
+      }
+    })
   }, [deleteElementById, stateData])
 
   return (
@@ -139,10 +208,7 @@ const Panel = () => {
               (elementsToRemove) => 
                 setElements((els) => removeElements(elementsToRemove, els))
             }
-            onEdgeUpdate={
-              (oldEdge, newConnection) =>
-                setElements((els) => updateEdge(oldEdge, newConnection, els))
-            }
+            onEdgeUpdate={onEdgeUpdate}
             onLoad={
               (_reactFlowInstance) => setReactFlowInstance(_reactFlowInstance)
             }

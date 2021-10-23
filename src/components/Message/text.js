@@ -37,29 +37,33 @@ const TextSection = ({ data, onEdit, editHandler }) => {
           /> :
           <Text fontSize="xs">{content}</Text>
       }
-      {data.buttons.map((b, idx) => {
-        return (
-          <Button colorScheme="blackAlpha" role="group" key={idx}>
-            {
-              onEdit ?
-                <Input defaultValue={b.text} bg={"#fff"} color={"#000"} style={{ textAlign: "center", height: "60%", borderRadius: "3px" }}
-                  onChange={(e) => {
-                    setButtons((bs) => {
-                      bs[idx] = {
-                        ...bs[idx],
-                        text: e.target.value
-                      };
-                      console.log(["buttons"], [bs]);
-                      editHandler(["buttons"], [bs]);
-                      return bs;
-                    });
-                  }}
-                /> :
-                <Text>{buttons[idx].text}</Text>
-            }
-          </Button>
-        )
-      })}
+      {
+        data.buttons ? 
+          data.buttons.map((b, idx) => {
+            return (
+              <Button colorScheme="blackAlpha" role="group" key={idx}>
+                {
+                  onEdit ?
+                    <Input defaultValue={b.text} bg={"#fff"} color={"#000"} style={{ textAlign: "center", height: "60%", borderRadius: "3px" }}
+                      onChange={(e) => {
+                        setButtons((bs) => {
+                          bs[idx] = {
+                            ...bs[idx],
+                            text: e.target.value
+                          };
+                          console.log(["buttons"], [bs]);
+                          editHandler(["buttons"], [bs]);
+                          return bs;
+                        });
+                      }}
+                    /> :
+                    <Text>{buttons[idx].text}</Text>
+                }
+              </Button>
+            )
+          }) : 
+          <></>
+      }
       {onEdit && <Flex w='100%' p={1} justify='center'>
         <MdAddCircleOutline fontSize='20px' cursor='pointer' onClick={handleAddOnClick}/>
       </Flex>}

@@ -39,7 +39,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
   return (
     <HStack h={contents.length !== 0 || onEdit ? '300px' : '0'} overflowX='scroll' spacing={10}>
       {contents && contents.map((content, index) => <Stack
-        key={content.url}
+        key={index}
         minW='300px'
         h='100%'
         justify='center'

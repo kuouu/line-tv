@@ -118,7 +118,7 @@ const State = ({data}) => {
           }} />
         </Flex>
         {sections.map((s, s_idx) => {
-          if (s.buttons) {
+          if (s.type === "text" && s.buttons) {
             return ([
               <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
               ...s.buttons.map((b, b_idx) => {
@@ -130,7 +130,7 @@ const State = ({data}) => {
                 )
               })
             ])
-          } else if (s.content) {
+          } else if (s.type === "carousel") {
             return ([
               <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
               ...s.content.map((b, b_idx) => {
