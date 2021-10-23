@@ -28,7 +28,7 @@ import {
 
 import { BsTextareaT, BsImage, BsGrid1X2 } from "react-icons/bs"
 import { BiCarousel } from "react-icons/bi"
-import { MdOutlineDragIndicator } from "react-icons/md"
+import { MdOutlineDragIndicator, MdEditNote, MdOutlineClose } from "react-icons/md"
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Handle } from 'react-flow-renderer';
@@ -39,10 +39,21 @@ import states from '../../store/state';
 const State = ({data}) => {
   const { id, onDelete } = data;
   let stateData = states.find(s => s.id === id);
-  const [sections, setSections] = useState(stateData?.sections || []);
+  const [sections, setSections] = useState(JSON.parse(JSON.stringify(stateData.sections)));
+  const [originalSections, setOriginalSections] = useState(JSON.parse(JSON.stringify(stateData.sections)));
   const [title, setTitle] = useState(stateData?.title || "");
+  const [editIdx, setEditIdx] = useState(-1);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onSave = async () => {
+    // sync to backend DB
+    setOriginalSections(JSON.parse(JSON.stringify(sections)));
+  }
+
+  const onCancel = () => {
+    setSections(JSON.parse(JSON.stringify(originalSections)));
+  }
 
   const onDragEnd = (res) => {
     if (!res.destination) {
@@ -58,6 +69,22 @@ const State = ({data}) => {
     });
   }
 
+  const onRemoveSection = (idx) => {
+    setSections(ss => {
+      const result = Array.from(ss);
+      result.splice(idx, 1);
+      return result;
+    });
+  }
+
+  const onEditSection = (idx, key, value) => {
+    setSections(ss => {
+      const result = Array.from(ss);
+      result[idx][key] = value;
+      return result;
+    });
+  }
+
   return (
     <div style={{border: "1px #000 solid", borderRadius: "4px", padding: "2px"}}>
       <Handle type="target" position="left"/>
@@ -69,13 +96,21 @@ const State = ({data}) => {
             onDelete(id);
           }} />
         </Flex>
-        {sections.map((s, idx) => {
-          return (
-            <Box key={idx} style={{ width: "100%", position: "relative", textAlign: "center" }} >
-              {s.type}
-              <Handle type="source" id={idx} position="right" style={{top: "50%"}} />
-            </Box>
-          )
+        {sections.map((s, s_idx) => {
+          if (s.buttons) {
+            return ([
+              <hr style={{margin: "1px", width: "100%", border: "#000 1px solid"}}/>, 
+              ...s.buttons.map((b, b_idx) => {
+                return (
+                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
+                    {b.text}
+                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{top: "50%"}} />
+                  </Box>
+                )  
+              })  
+            ])
+          }
+          return null;
         })}
       </VStack>
 
@@ -100,7 +135,7 @@ const State = ({data}) => {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
-                    {sections.map((s, idx) => (
+                    {sections.map((s, idx, arr) => (
                       <Draggable key={idx} draggableId={`${id}_${idx}`} index={idx}>
                         {(provided, snapshot) => (
                           <div
@@ -113,13 +148,42 @@ const State = ({data}) => {
                               role="group"
                               key={idx}
                             >
-                              <Flex width="100%" alignItems="center">
-                                <Text fontSize="sm" {...provided.dragHandleProps}>
-                                  <Icon as={MdOutlineDragIndicator} width="0px" style={{transition: '0.2s'}} _groupHover={{ width: '12px' }} />
-                                </Text>
-                                <Text fontWeight="bold" fontSize="sm">{`#${idx + 1} ${MessageTypeMap[s.type]}`}</Text>
+                              <Flex width="100%" alignItems="center" justifyContent="space-between">
+                                <Flex alignItems="center">
+                                  <Text fontSize="sm" {...provided.dragHandleProps}>
+                                    <Icon as={MdOutlineDragIndicator} width="0px" style={{transition: '0.2s'}} _groupHover={{ width: '12px' }} />
+                                  </Text>
+                                  <Text fontWeight="bold" fontSize="sm">{`#${idx + 1} ${MessageTypeMap[s.type]}`}</Text>
+                                </Flex>
+                                <Flex alignItems="center">
+                                  <Icon 
+                                    as={MdEditNote} 
+                                    onClick={() => {
+                                      setEditIdx(v => {
+                                        return v === idx ? -1 : idx
+                                      });
+                                    }}
+                                    style={{transition: '0.2s'}} 
+                                    opacity="0" 
+                                    _groupHover={{opacity: "1"}} 
+                                  />
+                                  <Icon 
+                                    as={MdOutlineClose} 
+                                    onClick={() => {
+                                      onRemoveSection(idx);
+                                    }} 
+                                    style={{transition: '0.2s'}} 
+                                    opacity="0" 
+                                    _groupHover={{opacity: "1"}} 
+                                  />
+                                </Flex>
                               </Flex>
-                              <MessageSection data={s}/>
+                              <MessageSection 
+                                data={s} 
+                                idx={idx} 
+                                onEdit={editIdx === idx} 
+                                onEditSection={onEditSection} 
+                              />
                             </Box>
                           </div>
                         )}
@@ -162,8 +226,11 @@ const State = ({data}) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button size="sm" colorScheme="blue" mr={3}>Save</Button>
-            <Button size="sm" onClick={onClose}>Cancel</Button>
+            <Button size="sm" onClick={onSave} colorScheme="blue" mr={3}>Save</Button>
+            <Button size="sm" onClick={() => {
+              onCancel();
+              onClose();
+            }}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
