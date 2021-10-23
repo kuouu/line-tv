@@ -34,6 +34,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Handle } from 'react-flow-renderer';
 
 import MessageSection, { MessageTypeMap } from "../Message";
+import { postFSM } from '../../store/action';
 
 const SectionTemplates = {
   "img": {
@@ -52,17 +53,20 @@ const SectionTemplates = {
 }
 
 const State = ({data}) => {
-  const { id, onDelete, stateData, onSaveState } = data;
+  const { id, onDelete, stateData, onSaveState, onSetPosition } = data;
   const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
-  // const [originalSections, setOriginalSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
   const [title, setTitle] = useState(stateData?.title || "");
   const [editIdx, setEditIdx] = useState(-1);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onSave = async () => {
-    // sync to backend DB
-    onSaveState(sections);
+    await postFSM(id, {
+      ...stateData,
+      title,
+      sections
+    });
+    onSaveState(sections, title);
   }
 
   const onCancel = () => {
@@ -109,7 +113,9 @@ const State = ({data}) => {
   return (
     <div style={{ border: "1px #000 solid", borderRadius: "4px", padding: "2px" }}>
       <Handle type="target" position="left" />
-      <VStack onClick={onOpen}>
+      <VStack onClick={onOpen} onMouseUp={(event) => {
+        onSetPosition(event.clientX, event.clientY);
+      }}>
         <Flex width="100%" alignItems="center">
           <Box padding="0 8px">{title}</Box>
           <Spacer />

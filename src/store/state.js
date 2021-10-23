@@ -24,7 +24,7 @@ const state = [
                 "buttons":[
                   {
                       "text":"優惠訊息",
-                      "edgeTo":" "
+                      "edgeTo":""
                   }
                 ]
             },
@@ -33,7 +33,7 @@ const state = [
                 "buttons":[
                   {
                       "text":"優惠訊息",
-                      "edgeTo":" "
+                      "edgeTo":""
                   }
                 ]
             },

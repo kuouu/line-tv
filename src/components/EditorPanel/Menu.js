@@ -1,6 +1,8 @@
 import React from 'react';
 
-const Menu = () => {
+import { Button } from '@chakra-ui/button';
+
+const Menu = ({onGlobalSave}) => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
@@ -17,6 +19,7 @@ const Menu = () => {
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
         Output Node
       </div>
+      <Button onClick={async () => await onGlobalSave()}>Save</Button>
     </aside>
   );
 };
