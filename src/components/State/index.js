@@ -34,7 +34,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Handle } from 'react-flow-renderer';
 
 import MessageSection, { MessageTypeMap } from "../Message";
-import states from '../../store/state';
 
 const SectionTemplates = {
   "img": {
@@ -49,10 +48,9 @@ const SectionTemplates = {
 }
 
 const State = ({data}) => {
-  const { id, onDelete } = data;
-  let stateData = states.find(s => s.id === id);
+  const { id, onDelete, stateData, onSaveState } = data;
   const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
-  const [originalSections, setOriginalSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
+  // const [originalSections, setOriginalSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
   const [title, setTitle] = useState(stateData?.title || "");
   const [editIdx, setEditIdx] = useState(-1);
 
@@ -60,11 +58,11 @@ const State = ({data}) => {
 
   const onSave = async () => {
     // sync to backend DB
-    setOriginalSections(JSON.parse(JSON.stringify(sections)));
+    onSaveState(sections);
   }
 
   const onCancel = () => {
-    setSections(JSON.parse(JSON.stringify(originalSections)));
+    setSections(JSON.parse(JSON.stringify(stateData?.sections || [])));
   }
 
   const onDragEnd = (res) => {

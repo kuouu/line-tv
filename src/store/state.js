@@ -15,11 +15,11 @@ const state = [
         buttons: [
           {
             text: "Location",
-            edgeTo: "node_1"
+            edgeTo: ""
           },
           {
             text: "About us",
-            edgeTo: "node_2"
+            edgeTo: ""
           }
         ]
       },

@@ -24,9 +24,29 @@ const Panel = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [elements, setElements] = useState([]);
+  const [stateData, setStateData] = useState(states);
 
-  const onConnect = (params) => 
-    setElements((els) => addEdge({ ...params, type: 'button', data: {onDelete: deleteElementById} }, els));
+  const onConnect = (params) => {
+    let sectionIdx = params.sourceHandle.split('_')[0];
+    let buttonIdx = params.sourceHandle.split('_')[1];
+
+    setElements((els) => 
+      addEdge({ 
+        ...params, 
+        type: 'button', 
+        data: {onDelete: deleteElementById} 
+      }, els)
+    );
+
+    let newStateData = stateData;
+    stateData.forEach((s, idx, arr) => {
+      if (s.id === params.source) {
+        arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = params.target;
+      }
+    });
+
+    setStateData(newStateData);
+  }
   
   const onDragOver = (event) => {
     event.preventDefault();
@@ -51,10 +71,28 @@ const Panel = () => {
       data: { 
         id: newId,
         onDelete: deleteElementById,
+        stateData: null,
+        onSaveState: (newSections) => {
+          setStateData(sd => {
+            return sd.map(s => {
+              if (s.id === newId) {
+                s.sections = newSections;
+              }
+              return s;
+            })
+          })
+        }
       },
     };
 
     setElements((es) => es.concat(newNode));
+    setStateData(sd => sd.concat({
+      id: newId,
+      type,
+      position,
+      title: "",
+      sections: []
+    }))
   };
 
   const deleteElementById = useCallback(
@@ -68,16 +106,27 @@ const Panel = () => {
   )
 
   useEffect(() => {
-    setElements(states.map(s => {
+    setElements(stateData.map(s => {
       return {
         ...s, 
         data: {
           id: s.id,
           onDelete: deleteElementById,
+          stateData: s,
+          onSaveState: (newSections) => {
+            setStateData(sd => {
+              return sd.map(_s => {
+                if (_s.id === s.id) {
+                  _s.sections = newSections;
+                }
+                return _s;
+              })
+            })
+          }
         }
       }
     }));
-  }, [deleteElementById])
+  }, [deleteElementById, stateData])
 
   return (
     <div className="dndflow">
