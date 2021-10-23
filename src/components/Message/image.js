@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { upload } from '../../store/action'
 
-const ImageSection = ({data}) => {
+const ImageSection = ({data, onEdit, editHandler}) => {
+  const [url, setUrl] = useState(data.url);
+
   return (
-    <div>
-      <img src={data.url} style={{borderRadius: '6px'}} alt="" />
-    </div>
+    <>
+      <img src={url} style={{borderRadius: '6px'}} alt="" />
+      <input type="file" style={{display: onEdit ? "block" : "none"}} onChange={async e => {
+        let newUrl = await upload(e.target.files[0]);
+        setUrl(newUrl);
+        editHandler(["url"], [newUrl]);
+      }}/>
+    </>
   )
 }
 

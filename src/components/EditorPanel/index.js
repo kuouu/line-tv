@@ -12,7 +12,6 @@ import ReactFlow, {
 import Menu from './Menu';
 import State from '../State';
 import ButtonEdge from '../State/ButtonEdge';
-import Node from '../State/Node';
 
 import states from '../../store/state';
 
@@ -29,7 +28,6 @@ const Panel = () => {
   const onConnect = (params) => 
     setElements((els) => addEdge({ ...params, type: 'button', data: {onDelete: deleteElementById} }, els));
   
-
   const onDragOver = (event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -50,9 +48,10 @@ const Panel = () => {
       id: newId,
       type,
       position,
-      data: { label: (
-        <State id={newId} onDelete={deleteElementById}/>
-      ) },
+      data: { 
+        id: newId,
+        onDelete: deleteElementById,
+      },
     };
 
     setElements((es) => es.concat(newNode));
@@ -73,9 +72,7 @@ const Panel = () => {
       return {
         ...s, 
         data: {
-          title: s.title,
           id: s.id,
-          sections: s.sections,
           onDelete: deleteElementById,
         }
       }
@@ -103,7 +100,7 @@ const Panel = () => {
             onDrop={onDrop}
             onDragOver={onDragOver}
             nodeTypes={{
-              node: Node
+              node: State
             }}
             edgeTypes={{
               button: ButtonEdge
