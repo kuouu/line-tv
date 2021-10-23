@@ -114,10 +114,11 @@ const Panel = () => {
     let newId = getId()
     const newNode = {
       id: newId,
-      type,
+      type: "node",
       position,
       data: { 
         id: newId,
+        type,
         onDelete: deleteElementById,
         stateData: null,
         onSaveState: (newSections) => {
@@ -167,11 +168,14 @@ const Panel = () => {
   )
 
   useEffect(() => {
+    // set nodes
     setElements(stateData.map(s => {
       return {
         ...s, 
+        type: "node",
         data: {
           id: s.id,
+          type: s.type,
           onDelete: deleteElementById,
           stateData: s,
           onSaveState: (newSections, title) => {
@@ -200,25 +204,27 @@ const Panel = () => {
       }
     }));
 
+    // link edges
     stateData.forEach(s => {
       if (s.sections) {
         s.sections.forEach((se, se_idx) => {
           if (se.type === "text" && se.buttons) {
             se.buttons.forEach((b, b_idx) => {
-              let params = {
-                source: s.id,
-                sourceHandle: `${se_idx}_${b_idx}`,
-                target: b.edgeTo,
-                targetHandle: null
+              if (b.edgeTo !== "") {
+                let params = {
+                  source: s.id,
+                  sourceHandle: `${se_idx}_${b_idx}`,
+                  target: b.edgeTo,
+                  targetHandle: null
+                }
+                setElements((els) => {
+                  return addEdge({ 
+                    ...params,
+                    type: 'button', 
+                    data: {onDelete: deleteElementById} 
+                  }, els)
+                });  
               }
-              // console.log(params);
-              setElements((els) => {
-                return addEdge({ 
-                  ...params,
-                  type: 'button', 
-                  data: {onDelete: deleteElementById} 
-                }, els)
-              });
             })
           } else if (se.type === "carousel") {
             se.content.forEach((c, c_idx) => {

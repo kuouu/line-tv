@@ -53,7 +53,7 @@ const SectionTemplates = {
 }
 
 const State = ({data}) => {
-  const { id, onDelete, stateData, onSaveState, onSetPosition } = data;
+  const { id, onDelete, stateData, onSaveState, onSetPosition, type } = data;
   const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
   const [title, setTitle] = useState(stateData?.title || "");
   const [editIdx, setEditIdx] = useState(-1);
