@@ -1,24 +1,34 @@
 import React, { useState } from 'react'
-
-import { 
+import {
   Text,
-  Stack, 
+  Stack,
   Button,
   Textarea,
-  Input
+  Input,
+  Flex
 } from '@chakra-ui/react'
+import { MdAddCircleOutline } from 'react-icons/md';
 
-const TextSection = ({data, onEdit, editHandler}) => {
+const TextSection = ({ data, onEdit, editHandler }) => {
   const [content, setContent] = useState(data.content);
   const [buttons, setButtons] = useState(data.buttons);
-
+  const handleAddOnClick = () => {
+    setButtons((bs) => {
+      const newBtn = {
+        text: "new button",
+        edgeTo: ""
+      }
+      editHandler(["buttons"], [[...bs, newBtn]]);
+      return [...bs, newBtn];
+    });
+  }
   return (
     <Stack>
       {
-        onEdit ? 
-          <Textarea 
-            fontSize="xs" 
-            defaultValue={content} 
+        onEdit ?
+          <Textarea
+            fontSize="xs"
+            defaultValue={content}
             bg={"#fff"}
             onChange={(e) => {
               setContent(e.target.value);
@@ -31,14 +41,15 @@ const TextSection = ({data, onEdit, editHandler}) => {
         return (
           <Button colorScheme="blackAlpha" role="group" key={idx}>
             {
-              onEdit ? 
-                <Input defaultValue={b.text} bg={"#fff"} color={"#000"} style={{textAlign: "center", height: "60%", borderRadius: "3px"}} 
+              onEdit ?
+                <Input defaultValue={b.text} bg={"#fff"} color={"#000"} style={{ textAlign: "center", height: "60%", borderRadius: "3px" }}
                   onChange={(e) => {
                     setButtons((bs) => {
                       bs[idx] = {
                         ...bs[idx],
                         text: e.target.value
                       };
+                      console.log(["buttons"], [bs]);
                       editHandler(["buttons"], [bs]);
                       return bs;
                     });
@@ -49,6 +60,9 @@ const TextSection = ({data, onEdit, editHandler}) => {
           </Button>
         )
       })}
+      {onEdit && <Flex w='100%' p={1} justify='center'>
+        <MdAddCircleOutline fontSize='20px' cursor='pointer' onClick={handleAddOnClick}/>
+      </Flex>}
     </Stack>
   )
 }
