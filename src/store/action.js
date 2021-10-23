@@ -23,3 +23,20 @@ export const upload = async (path) => {
   }
 
 }
+
+export const getStoreInfo = async () => {
+
+  try {
+    let res = await axios({
+      method: 'get',
+      url: 'http://34.80.76.67:8000/shops/1',
+      headers: {
+        'Content-type': 'application/json'
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
