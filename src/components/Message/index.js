@@ -2,10 +2,12 @@ import React from 'react'
 
 import TextSection from './text';
 import ImageSection from './image';
+import CarouselSection from './CarouselSection';
 
 export const MessageTypeMap = {
   "text": "Send Text",
-  "img": "Send Image"
+  "img": "Send Image",
+  "carousel": "Image Carousel"
 }
 
 const MessageSection = ({data, idx, onEdit, onEditSection}) => {
@@ -24,6 +26,11 @@ const MessageSection = ({data, idx, onEdit, onEditSection}) => {
     case "img": {
       return (
         <ImageSection data={data} onEdit={onEdit} editHandler={editHandler} />
+      )    
+    }
+    case "carousel": {
+      return (
+        <CarouselSection data={data} onEdit={onEdit} editHandler={editHandler} />
       )    
     }
     default: {

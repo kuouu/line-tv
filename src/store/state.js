@@ -23,29 +23,29 @@ const state = [
           }
         ]
       },
-      // {
-      //   type: "carousel",
-      //   content: [
-      //     {
-      //       url: "https://...",
-      //       buttons: [
-      //         {
-      //           text: "test",
-      //           edgeTo: "node_3"
-      //         }
-      //       ]
-      //     },
-      //     {
-      //       url: "https://...",
-      //       buttons: [
-      //         {
-      //           text: "test",
-      //           edgeTo: "node_4"
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // }
+      {
+        type: "carousel",
+        content: [
+          {
+            url: "https://scontent.fkhh1-1.fna.fbcdn.net/v/t1.6435-9/247422907_4271492296309787_6334814990393885414_n.png?_nc_cat=106&ccb=1-5&_nc_sid=730e14&_nc_ohc=o7iYjM3_EpgAX-vehym&_nc_ht=scontent.fkhh1-1.fna&oh=ecfccbe9eb238b700cdae4079398cfa2&oe=61987509",
+            buttons: [
+              {
+                text: "test",
+                edgeTo: "node_3"
+              }
+            ]
+          },
+          {
+            url: "https://scontent.fkhh1-1.fna.fbcdn.net/v/t1.6435-9/245630095_4271492292976454_4327254763463996235_n.png?_nc_cat=102&ccb=1-5&_nc_sid=730e14&_nc_ohc=r164aZkgH5YAX9-aAvT&_nc_ht=scontent.fkhh1-1.fna&oh=94a7aeaa85d88df740bbb472cc5a39c8&oe=61984AE8",
+            buttons: [
+              {
+                text: "test",
+                edgeTo: "node_4"
+              }
+            ]
+          }
+        ]
+      }
     ]
   }
 ];

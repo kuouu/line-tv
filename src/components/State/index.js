@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
-import { 
-  CloseButton, 
+import {
+  CloseButton,
   SimpleGrid,
-  VStack, 
-  Flex, 
-  Spacer, 
-  Box, 
+  VStack,
+  Flex,
+  Spacer,
+  Box,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -45,10 +45,14 @@ const SectionTemplates = {
     type: "text",
     content: "",
     buttons: []
+  },
+  "carousel": {
+    type: "",
+    content: []
   }
 }
 
-const State = ({data}) => {
+const State = ({ data }) => {
   const { id, onDelete } = data;
   let stateData = states.find(s => s.id === id);
   const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
@@ -76,7 +80,7 @@ const State = ({data}) => {
       const result = Array.from(ss);
       const [removed] = result.splice(res.source.index, 1);
       result.splice(res.destination.index, 0, removed);
-    
+
       return result;
     });
   }
@@ -105,8 +109,8 @@ const State = ({data}) => {
   }
 
   return (
-    <div style={{border: "1px #000 solid", borderRadius: "4px", padding: "2px"}}>
-      <Handle type="target" position="left"/>
+    <div style={{ border: "1px #000 solid", borderRadius: "4px", padding: "2px" }}>
+      <Handle type="target" position="left" />
       <VStack onClick={onOpen}>
         <Flex width="100%" alignItems="center">
           <Box padding="0 8px">{title}</Box>
@@ -118,15 +122,15 @@ const State = ({data}) => {
         {sections.map((s, s_idx) => {
           if (s.buttons) {
             return ([
-              <hr style={{margin: "1px", width: "100%", border: "#000 1px solid"}}/>, 
+              <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
               ...s.buttons.map((b, b_idx) => {
                 return (
                   <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
                     {b.text}
-                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{top: "50%"}} />
+                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{ top: "50%" }} />
                   </Box>
-                )  
-              })  
+                )
+              })
             ])
           }
           return null;
@@ -138,7 +142,7 @@ const State = ({data}) => {
         <ModalContent>
           <ModalHeader>
             <Input
-              placeholder="Title here" 
+              placeholder="Title here"
               variant="flushed"
               maxWidth="90%"
               value={title}
@@ -161,47 +165,47 @@ const State = ({data}) => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                           >
-                            <Box 
+                            <Box
                               p="6px 10px"
-                              _hover={{bg: '#EDF2F7', transition: '0.3s', borderRadius: '6px'}} 
+                              _hover={{ bg: '#EDF2F7', transition: '0.3s', borderRadius: '6px' }}
                               role="group"
                               key={idx}
                             >
                               <Flex width="100%" alignItems="center" justifyContent="space-between">
                                 <Flex alignItems="center">
                                   <Text fontSize="sm" {...provided.dragHandleProps}>
-                                    <Icon as={MdOutlineDragIndicator} width="0px" style={{transition: '0.2s'}} _groupHover={{ width: '12px' }} />
+                                    <Icon as={MdOutlineDragIndicator} width="0px" style={{ transition: '0.2s' }} _groupHover={{ width: '12px' }} />
                                   </Text>
                                   <Text fontWeight="bold" fontSize="sm">{`#${idx + 1} ${MessageTypeMap[s.type]}`}</Text>
                                 </Flex>
                                 <Flex alignItems="center">
-                                  <Icon 
-                                    as={MdEditNote} 
+                                  <Icon
+                                    as={MdEditNote}
                                     onClick={() => {
                                       setEditIdx(v => {
                                         return v === idx ? -1 : idx
                                       });
                                     }}
-                                    style={{transition: '0.2s'}} 
-                                    opacity="0" 
-                                    _groupHover={{opacity: "1"}} 
+                                    style={{ transition: '0.2s' }}
+                                    opacity="0"
+                                    _groupHover={{ opacity: "1" }}
                                   />
-                                  <Icon 
-                                    as={MdOutlineClose} 
+                                  <Icon
+                                    as={MdOutlineClose}
                                     onClick={() => {
                                       onRemoveSection(idx);
-                                    }} 
-                                    style={{transition: '0.2s'}} 
-                                    opacity="0" 
-                                    _groupHover={{opacity: "1"}} 
+                                    }}
+                                    style={{ transition: '0.2s' }}
+                                    opacity="0"
+                                    _groupHover={{ opacity: "1" }}
                                   />
                                 </Flex>
                               </Flex>
-                              <MessageSection 
-                                data={s} 
-                                idx={idx} 
-                                onEdit={editIdx === idx} 
-                                onEditSection={onEditSection} 
+                              <MessageSection
+                                data={s}
+                                idx={idx}
+                                onEdit={editIdx === idx}
+                                onEditSection={onEditSection}
                               />
                             </Box>
                           </div>
