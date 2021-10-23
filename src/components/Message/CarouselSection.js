@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Flex, HStack, Image, Input, Stack, Text } from '@chakra-ui/react'
 import { MdAddCircleOutline } from 'react-icons/md';
 import { upload } from '../../store/action'
