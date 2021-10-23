@@ -13,8 +13,9 @@ export default function Infomation() {
     }
   }
   const addNewTag = (e) => {
+    if(tags.length >= 5) return;
     const newTag = e.target.value
-      setTags([...tags, newTag])
+    setTags([...tags, newTag])
     e.target.value = ''
   }
   const deleteTag = (key) => {
@@ -59,7 +60,10 @@ export default function Infomation() {
         </Stack>
       </Stack>
       <Stack w='48%'>
-        <Text>Tags:</Text>
+        <Flex w='100%' justify='space-between'>
+          <Text>Tags:</Text>
+          <Text>{`${tags.length}/5`}</Text>
+        </Flex>
         <Input onBlur={handleOnBlur} onKeyPress={handleEnter} />
         <Flex wrap='wrap'>
           {tags.map(tag => <Tag m='5px' colorScheme='cyan' key={tag}>
