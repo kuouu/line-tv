@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   CloseButton,
@@ -34,22 +34,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Handle } from 'react-flow-renderer';
 
 import MessageSection, { MessageTypeMap } from "../Message";
-
-const SectionTemplates = {
-  "img": {
-    type: "img",
-    url: ""
-  },
-  "text": {
-    type: "text",
-    content: "",
-    buttons: []
-  },
-  "carousel": {
-    type: "carousel",
-    content: []
-  }
-}
 
 const State = ({data}) => {
   const { id, onDelete, stateData, onSaveState } = data;
@@ -100,10 +84,24 @@ const State = ({data}) => {
   }
 
   const onNewSection = (type) => {
-    let newSection = SectionTemplates[type];
-    setSections(ss => {
-      return [...ss, newSection];
-    })
+    const SectionTemplates = {
+      "img": {
+        type: "img",
+        url: ""
+      },
+      "text": {
+        type: "text",
+        content: "",
+        buttons: []
+      },
+      "carousel": {
+        type: "carousel",
+        content: []
+      }
+    }
+    console.log(SectionTemplates, type, SectionTemplates[type])
+    const newSection = [...sections, SectionTemplates[type]];
+    setSections(newSection);
   }
 
   return (
