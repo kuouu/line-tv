@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Flex, HStack, Image, Input, Stack, Text } from '@chakra-ui/react'
 import { MdAddCircleOutline } from 'react-icons/md';
+import { upload } from '../../store/action'
 
 export default function CarouselSection({ data, onEdit, editHandler }) {
-  const [contents, setContents] = useState(data.content);
+  const contents = data.content;
+  const [urls, setUrls] = useState(data.content.map(e => e.url))
   const ImagePlaceHolder = () => <Flex
     minW='300px'
     h='100%'
@@ -13,19 +15,65 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
     borderRadius='5px'
     cursor='pointer'
   >
-    <MdAddCircleOutline fontSize='40px' />
+    {onEdit && <input
+      style={{ width: 0, opacity: 0 }}
+      display='none'
+      type='file'
+      id={`imgupload_${data.content.length}`}
+      onChange={async e => {
+        const newUrl = await upload(e.target.files[0]);
+        setUrls(urlState => {
+          const newState = [...urlState, newUrl];
+          const newContent = [...contents, {
+            url: newUrl,
+            buttons: [
+              {
+                text: "text",
+                edgeTo: ""
+              }
+            ]
+          }]
+          editHandler(["content"], [newContent]);
+          return newState;
+        });
+      }} />}
+    <label htmlFor={`imgupload_${data.content.length}`}>
+      <MdAddCircleOutline fontSize='40px' cursor='pointer'/>
+    </label>
   </Flex>
   return (
-    <HStack h='300px' overflowX='scroll' spacing={5}>
-      {contents && contents.map(content => <Stack
+    <HStack h='300px' overflowX='scroll' spacing={10}>
+      {contents && contents.map((content, index) => <Stack
+        key={content.url}
         minW='300px'
         h='100%'
         justify='center'
         align='center'
         borderRadius='5px'
         position='relative'
+        overflow='hidden'
+        bgColor='rgba(255, 255, 255, 0.5)'
       >
-        <Image src={content.url} cursor='pointer'/>
+        {onEdit && <input
+          style={{ height: 0, opacity: 0 }}
+          display='none'
+          type='file'
+          id={`imgupload_${index}`}
+          onChange={async e => {
+            const newUrl = await upload(e.target.files[0]);
+            setUrls(urlState => {
+              urlState[index] = newUrl;
+              const newContent = contents.map((content, idx) => ({ ...content, url: urlState[idx] }));
+              editHandler(["content"], [newContent]);
+              return urlState;
+            });
+          }} />}
+        <label htmlFor={`imgupload_${index}`}>
+          <Image
+            src={content.url}
+            cursor={onEdit ? 'pointer' : 'default'}
+          />
+        </label>
         <Flex
           px={5}
           py={2}
