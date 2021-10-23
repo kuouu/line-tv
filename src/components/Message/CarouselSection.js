@@ -5,7 +5,6 @@ import { upload } from '../../store/action'
 
 export default function CarouselSection({ data, onEdit, editHandler }) {
   const contents = data.content;
-  const [urls, setUrls] = useState(data.content.map(e => e.url))
   const ImagePlaceHolder = () => <Flex
     minW='300px'
     h='100%'
@@ -22,23 +21,19 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
       id={`imgupload_${data.content.length}`}
       onChange={async e => {
         const newUrl = await upload(e.target.files[0]);
-        setUrls(urlState => {
-          const newState = [...urlState, newUrl];
-          const newContent = [...contents, {
-            url: newUrl,
-            buttons: [
-              {
-                text: "text",
-                edgeTo: ""
-              }
-            ]
-          }]
-          editHandler(["content"], [newContent]);
-          return newState;
-        });
+        const newContent = [...contents, {
+          url: newUrl,
+          buttons: [
+            {
+              text: "text",
+              edgeTo: ""
+            }
+          ]
+        }]
+        editHandler(["content"], [newContent]);
       }} />}
     <label htmlFor={`imgupload_${data.content.length}`}>
-      <MdAddCircleOutline fontSize='40px' cursor='pointer'/>
+      <MdAddCircleOutline fontSize='40px' cursor='pointer' />
     </label>
   </Flex>
   return (
@@ -61,12 +56,9 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
           id={`imgupload_${index}`}
           onChange={async e => {
             const newUrl = await upload(e.target.files[0]);
-            setUrls(urlState => {
-              urlState[index] = newUrl;
-              const newContent = contents.map((content, idx) => ({ ...content, url: urlState[idx] }));
-              editHandler(["content"], [newContent]);
-              return urlState;
-            });
+            const urls = data.content.map((e, idx) => idx===index? newUrl : e.url);
+            const newContent = contents.map((content, idx) => ({ ...content, url: urls[idx] }));
+            editHandler(["content"], [newContent]);
           }} />}
         <label htmlFor={`imgupload_${index}`}>
           <Image
@@ -90,8 +82,18 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
               maxH='100%'
               textAlign='center'
               variant="flushed"
+              value={content.buttons[0].text}
+              onChange={(e) => {
+                const newBtn = [{
+                  ...content.buttons[0],
+                  text: e.target.value
+                }]
+                const newContent = contents.map((content) => ({ ...content, buttons: newBtn }));
+                editHandler(["content"], [newContent])
+              }
+              }
             />
-            : <Text>test</Text>}
+            : <Text>{content.buttons[0].text}</Text>}
         </Flex>
       </Stack>)}
       {onEdit && <ImagePlaceHolder />}
