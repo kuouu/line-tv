@@ -36,11 +36,23 @@ import { Handle } from 'react-flow-renderer';
 import MessageSection, { MessageTypeMap } from "../Message";
 import states from '../../store/state';
 
+const SectionTemplates = {
+  "img": {
+    type: "img",
+    url: ""
+  },
+  "text": {
+    type: "text",
+    content: "",
+    buttons: []
+  }
+}
+
 const State = ({data}) => {
   const { id, onDelete } = data;
   let stateData = states.find(s => s.id === id);
-  const [sections, setSections] = useState(JSON.parse(JSON.stringify(stateData.sections)));
-  const [originalSections, setOriginalSections] = useState(JSON.parse(JSON.stringify(stateData.sections)));
+  const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
+  const [originalSections, setOriginalSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
   const [title, setTitle] = useState(stateData?.title || "");
   const [editIdx, setEditIdx] = useState(-1);
 
@@ -83,6 +95,13 @@ const State = ({data}) => {
       result[idx][key] = value;
       return result;
     });
+  }
+
+  const onNewSection = (type) => {
+    let newSection = SectionTemplates[type];
+    setSections(ss => {
+      return [...ss, newSection];
+    })
   }
 
   return (
@@ -206,18 +225,30 @@ const State = ({data}) => {
                     <ListItem
                       title="Text message"
                       icon={BsTextareaT}
+                      onClick={() => {
+                        onNewSection("text");
+                      }}
                     />
                     <ListItem
                       title="Image message"
                       icon={BsImage}
+                      onClick={() => {
+                        onNewSection("img");
+                      }}
                     />
                     <ListItem
                       title="Carousel message"
                       icon={BiCarousel}
+                      onClick={() => {
+                        onNewSection("carousel");
+                      }}
                     />
                     <ListItem
                       title="Menu message"
                       icon={BsGrid1X2}
+                      onClick={() => {
+                        onNewSection("menu");
+                      }}
                     />
                   </SimpleGrid>
                 </AccordionPanel>
@@ -238,9 +269,9 @@ const State = ({data}) => {
   )
 }
 
-const ListItem = ({ title, icon, ...rest }) => {
+const ListItem = ({ title, type, icon, ...rest }) => {
   return (
-    <Box _hover={{ bg: "var(--chakra-colors-gray-200)" }} p="2px 10px" shadow="md" borderWidth="1px" borderRadius="6px" {...rest}>
+    <Box _hover={{ bg: "var(--chakra-colors-gray-200)" }} p="2px 10px" shadow="md" borderWidth="1px" borderRadius="6px" {...rest} >
       <Icon as={icon} /> <Text display="inline" fontSize="sm">{title}</Text>
     </Box>
   )
