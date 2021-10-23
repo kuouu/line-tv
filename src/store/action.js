@@ -40,3 +40,19 @@ export const getStoreInfo = async () => {
     console.log(e)
   }
 }
+
+export const postStoreInfo = async (data) => {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: 'http://34.80.76.67:8000/shops',
+      data,
+      headers: {
+        'Content-type': 'application/json'
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.log(e)
+  }
+}

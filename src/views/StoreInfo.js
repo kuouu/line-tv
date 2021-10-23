@@ -3,7 +3,7 @@ import { Stack } from '@chakra-ui/react'
 import StoreName from '../components/StoreInfo/StoreName'
 import Infomation from '../components/StoreInfo/Infomation'
 import Description from '../components/StoreInfo/Description'
-import { getStoreInfo } from '../store/action';
+import { getStoreInfo, postStoreInfo } from '../store/action';
 
 export default function StoreInfo() {
   const [name, setName] = useState('');
@@ -37,7 +37,19 @@ export default function StoreInfo() {
       flexGrow={1}
       spacing={8}
     >
-      <StoreName name={name} icon={icon} />
+      <StoreName
+        name={name}
+        icon={icon}
+        submit={() => postStoreInfo({
+          shop_id: 1,
+          name,
+          location: info.location,
+          category: info.category.join('.'),
+          opening_hours: info.opening_hours.join('~'),
+          description: description,
+          phone_num: info.phone_num,
+        })}
+      />
       <Infomation info={info} setInfo={setInfo} />
       <Description description={description} setDescription={setDescription} />
     </Stack>
