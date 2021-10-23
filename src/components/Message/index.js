@@ -8,16 +8,22 @@ export const MessageTypeMap = {
   "img": "Send Image"
 }
 
-const MessageSection = ({data}) => {
+const MessageSection = ({data, idx, onEdit, onEditSection}) => {
+  const editHandler = (keys, values) => {
+    keys.forEach((key, i) => {
+      onEditSection(idx, key, values[i]);
+    });
+  }
+
   switch(data.type) {
     case "text": {
       return (
-        <TextSection data={data} />
+        <TextSection data={data} onEdit={onEdit} editHandler={editHandler} />
       )    
     }
     case "img": {
       return (
-        <ImageSection data={data} />
+        <ImageSection data={data} onEdit={onEdit} editHandler={editHandler} />
       )    
     }
     default: {
