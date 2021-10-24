@@ -98,7 +98,10 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
                     ...content.buttons[0],
                     text: e.target.value
                   }]
-                  const newContent = contents.map((content) => ({ ...content, buttons: newBtn }));
+                  const newContent = contents.map(
+                    (content, idx) => (
+                      index === idx ? { ...content, buttons: newBtn } : content)
+                  );
                   editHandler(["content"], [newContent])
                 }
                 }
