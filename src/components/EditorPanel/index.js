@@ -17,8 +17,8 @@ import { getFSM, postFSM } from '../../store/action';
 
 import './style.css';
 
-let id = 1;
-const getId = () => `node_${id++}`;
+let startId = 1;
+const getId = () => `node_${startId++}`;
 
 const Panel = () => {
   const reactFlowWrapper = useRef(null);
@@ -31,14 +31,38 @@ const Panel = () => {
       let sd = states.data.map(s => {
         return JSON.parse(s.data.replace('\\\"', '\"'));
       });
+      startId = sd.length;
       setStateData(sd);
     }
     getData();
   }, [])
   
   const onGlobalSave = () => {
-    stateData.forEach(sd => {
-      postFSM(sd.id, sd);
+    // update edges to deleted nodes
+    let stateIds = stateData.map(sd => sd.id);
+
+    let newStateData = stateData;
+    stateData.forEach(s => {
+      s.sections.forEach(_s => {
+        if (_s.type === "text" && _s.buttons) {
+          _s.buttons.forEach((b, idx, arr) => {
+            if (stateIds.indexOf(b.edgeTo) === -1) {
+              arr[idx].edgeTo = "";
+            }
+          })
+        } else if (_s.type === "carousel") {
+          _s.content.forEach((c, c_idx, arr) => {
+            if (stateIds.indexOf(c.buttons[0].edgeTo) === -1) {
+              arr[c_idx].edgeTo = "";
+            }
+          })
+        }
+      })
+    })
+    setStateData(newStateData);
+
+    stateData.forEach(s => {
+      postFSM(s.id, s);
     })
   }
 
@@ -57,14 +81,13 @@ const Panel = () => {
     let newStateData = stateData;
     stateData.forEach((s, idx, arr) => {
       if (s.id === params.source) {
-        if (s.type === "text" && s.buttons) {
+        if (s.sections[sectionIdx].type === "text") {
           arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = params.target;
-        } else if (s.type === "carousel") {
+        } else if (s.sections[sectionIdx].type === "carousel") {
           arr[idx].sections[sectionIdx].content[buttonIdx].buttons[0].edgeTo = params.target;
         }
       }
     });
-
     setStateData(newStateData);
   }
 
@@ -74,15 +97,14 @@ const Panel = () => {
     let newStateData = stateData;
     stateData.forEach((s, idx, arr) => {
       if (s.id === newConnection.source) {
-        if (s.type === "text" && s.buttons) {
+        if (s.sections[sectionIdx].type === "text") {
           arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = newConnection.target;
-        } else if (s.type === "carousel") {
+        } else if (s.sections[sectionIdx].type === "carousel") {
           arr[idx].sections[sectionIdx].content[buttonIdx].buttons[0].edgeTo = newConnection.target;
         }
       }
     });
     setStateData(newStateData);
-    console.log(newStateData);
     setElements((els) => updateEdge(oldEdge, newConnection, els));
   }
   
@@ -155,12 +177,32 @@ const Panel = () => {
   const deleteElementById = useCallback(
     (id) => setElements((els) => {
       const targetElement = els.filter(e => e.id === id);
-      stateData.splice(stateData.findIndex(s => s.id === id), 1);
-      setStateData(stateData);
+      if (targetElement[0].type === "node") {
+        stateData.splice(stateData.findIndex(s => s.id === id), 1);
+        setStateData(stateData);
+        const edges = reactFlowInstance.getElements().filter(e => isEdge(e));
+        const connectedEdges = getConnectedEdges(targetElement, edges);
+        return removeElements([...targetElement, ...connectedEdges], els);  
+      } else if (targetElement[0].type === "button") {
+        console.log(targetElement[0]);
 
-      const edges = reactFlowInstance.getElements().filter(e => isEdge(e));
-      const connectedEdges = getConnectedEdges(targetElement, edges);        
-      return removeElements([...targetElement, ...connectedEdges], els);
+        let sectionIdx = targetElement[0].sourceHandle.split('_')[0];
+        let buttonIdx = targetElement[0].sourceHandle.split('_')[1];
+        let newStateData = stateData;
+        stateData.forEach((s, idx, arr) => {
+          if (s.id === targetElement[0].source) {
+            if (s.sections[sectionIdx].type === "text") {
+              arr[idx].sections[sectionIdx].buttons[buttonIdx].edgeTo = "";
+            } else if (s.sections[sectionIdx].type === "carousel") {
+              arr[idx].sections[sectionIdx].content[buttonIdx].buttons[0].edgeTo = "";
+            }
+          }
+        });
+        setStateData(newStateData);
+        console.log(stateData);
+
+        return removeElements([...targetElement], els);  
+      }
     }),
     [reactFlowInstance, stateData],
   )
@@ -174,8 +216,8 @@ const Panel = () => {
         data: {
           id: s.id,
           type: s.type,
-          onDelete: deleteElementById,
           stateData: s,
+          onDelete: deleteElementById,
           onSaveState: (newSections, title) => {
             setStateData(sd => {
               return sd.map(_s => {

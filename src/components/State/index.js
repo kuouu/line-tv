@@ -113,9 +113,12 @@ const State = ({data}) => {
   return (
     <div style={{ border: "1px #000 solid", borderRadius: "4px", padding: "2px" }}>
       <Handle type="target" position="left" />
-      <VStack onClick={onOpen} onMouseUp={(event) => {
-        onSetPosition(event.clientX, event.clientY);
-      }}>
+      <VStack 
+        onClick={onOpen} 
+        onMouseUp={(event) => {
+          onSetPosition(event.clientX, event.clientY);
+        }}
+      >
         <Flex width="100%" alignItems="center">
           <Box padding="0 8px">{title}</Box>
           <Spacer />
