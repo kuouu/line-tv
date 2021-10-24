@@ -30,7 +30,7 @@ export default function CustomerChart() {
       borderRadius={3}
     >
       <Flex bgColor='#fafafa' p={3} fontWeight='semibold'>
-        Key Number
+        Traffic
       </Flex>
       <ReactECharts style={{height: '100%'}} option={chartOption} />
     </Flex>
