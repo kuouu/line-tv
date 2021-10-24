@@ -36,22 +36,6 @@ import { Handle } from 'react-flow-renderer';
 import MessageSection, { MessageTypeMap } from "../Message";
 import { postFSM } from '../../store/action';
 
-const SectionTemplates = {
-  "img": {
-    type: "img",
-    url: ""
-  },
-  "text": {
-    type: "text",
-    content: "",
-    buttons: []
-  },
-  "carousel": {
-    type: "carousel",
-    content: []
-  }
-}
-
 const State = ({data}) => {
   const { id, onDelete, stateData, onSaveState, onSetPosition, type } = data;
   const [sections, setSections] = useState(stateData ? JSON.parse(JSON.stringify(stateData.sections)) : []);
@@ -104,14 +88,28 @@ const State = ({data}) => {
   }
 
   const onNewSection = (type) => {
-    let newSection = SectionTemplates[type];
-    setSections(ss => {
-      return [...ss, newSection];
-    })
+    const SectionTemplates = {
+      "img": {
+        type: "img",
+        url: ""
+      },
+      "text": {
+        type: "text",
+        content: "",
+        buttons: []
+      },
+      "carousel": {
+        type: "carousel",
+        content: []
+      }
+    }
+    console.log(SectionTemplates, type, SectionTemplates[type])
+    const newSection = [...sections, SectionTemplates[type]];
+    setSections(newSection);
   }
 
   return (
-    <div style={{ border: "1px #000 solid", borderRadius: "4px", padding: "2px" }}>
+    <div style={dotStyle}>
       <Handle type="target" position="left" />
       <VStack 
         onClick={onOpen} 
@@ -120,7 +118,7 @@ const State = ({data}) => {
         }}
       >
         <Flex width="100%" alignItems="center">
-          <Box padding="0 8px">{title}</Box>
+          <Box padding="0 8px" fontWeight='bold' color='#282c34'>{title}</Box>
           <Spacer />
           <CloseButton size="sm" onClick={() => {
             onDelete(id);
@@ -132,9 +130,9 @@ const State = ({data}) => {
               <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
               ...s.buttons.map((b, b_idx) => {
                 return (
-                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
+                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: '3px', width: "100%", position: "relative", textAlign: "center" }} >
                     {b.text}
-                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{ top: "50%" }} />
+                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={dotStyle} />
                   </Box>
                 )
               })
@@ -144,9 +142,9 @@ const State = ({data}) => {
               <hr style={{ margin: "1px", width: "100%", border: "#000 1px solid" }} />,
               ...s.content.map((b, b_idx) => {
                 return (
-                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: 0, width: "100%", position: "relative", textAlign: "center" }} >
+                  <Box key={`${s_idx}_${b_idx}`} style={{ margin: '3px', width: "100%", position: "relative", textAlign: "center" }} >
                     {b.buttons[0].text}
-                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={{ top: "50%" }} />
+                    <Handle type="source" id={`${s_idx}_${b_idx}`} position="right" style={dotStyle}></Handle>
                   </Box>
                 )
               })
@@ -186,11 +184,12 @@ const State = ({data}) => {
                           >
                             <Box
                               p="6px 10px"
+                              m='10px 0'
                               _hover={{ bg: '#EDF2F7', transition: '0.3s', borderRadius: '6px' }}
                               role="group"
                               key={idx}
                             >
-                              <Flex width="100%" alignItems="center" justifyContent="space-between">
+                              <Flex width="100%" alignItems="center" justifyContent="space-between" mb={3}>
                                 <Flex alignItems="center">
                                   <Text fontSize="sm" {...provided.dragHandleProps}>
                                     <Icon as={MdOutlineDragIndicator} width="0px" style={{ transition: '0.2s' }} _groupHover={{ width: '12px' }} />
@@ -301,3 +300,18 @@ const ListItem = ({ title, type, icon, ...rest }) => {
 }
 
 export default State;
+
+const nodeStyle = {
+  border: "1px #878787 solid",
+  borderRadius: "4px",
+  padding: "8px",
+  backgroundColor: "#fafafa",
+  boxShadow: '3px 5px 18px 0 rgba(0, 112, 188, 0.1), 0 -1px 16px 0 rgba(0, 112, 188, 0.1)'
+}
+
+const dotStyle = {
+  top: '50%',
+  width: '8px',
+  height: '8px',
+  zIndex: 100,
+}

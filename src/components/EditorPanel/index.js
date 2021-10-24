@@ -6,7 +6,8 @@ import ReactFlow, {
   updateEdge,
   removeElements,
   Controls,
-  getConnectedEdges
+  getConnectedEdges,
+  Background
 } from 'react-flow-renderer';
 
 import Menu from './Menu';
@@ -107,7 +108,7 @@ const Panel = () => {
     setStateData(newStateData);
     setElements((els) => updateEdge(oldEdge, newConnection, els));
   }
-  
+
   const onDragOver = (event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -136,7 +137,7 @@ const Panel = () => {
       id: newId,
       type: "node",
       position,
-      data: { 
+      data: {
         id: newId,
         type,
         onDelete: deleteElementById,
@@ -276,15 +277,15 @@ const Panel = () => {
                   targetHandle: null
                 }
                 setElements((els) => {
-                  return addEdge({ 
+                  return addEdge({
                     ...params,
-                    type: 'button', 
-                    data: {onDelete: deleteElementById} 
+                    type: 'button',
+                    data: { onDelete: deleteElementById }
                   }, els)
-                });  
+                });
               }
             })
-          }    
+          }
         });
       }
     })
@@ -298,7 +299,7 @@ const Panel = () => {
             elements={elements}
             onConnect={onConnect}
             onElementsRemove={
-              (elementsToRemove) => 
+              (elementsToRemove) =>
                 setElements((els) => removeElements(elementsToRemove, els))
             }
             onEdgeUpdate={onEdgeUpdate}
@@ -315,6 +316,11 @@ const Panel = () => {
             }}
           >
             <Controls />
+            <Background
+              variant="lines"
+              gap={100}
+              size={2}
+            />
           </ReactFlow>
         </div>
         <Menu onGlobalSave={onGlobalSave} />
