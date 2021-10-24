@@ -110,7 +110,7 @@ const State = ({data}) => {
 
   return (
     <div style={nodeStyle}>
-      <Handle type="target" position="left" />
+      <Handle type="target" position="left" style={dotStyle}/>
       <VStack 
         onClick={onOpen} 
         onMouseUp={(event) => {
