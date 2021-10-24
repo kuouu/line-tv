@@ -6,7 +6,8 @@ import ReactFlow, {
   updateEdge,
   removeElements,
   Controls,
-  getConnectedEdges
+  getConnectedEdges,
+  Background
 } from 'react-flow-renderer';
 
 import Menu from './Menu';
@@ -32,10 +33,10 @@ const Panel = () => {
 
     setElements((els) => {
       console.log(params);
-      return addEdge({ 
-        ...params, 
-        type: 'button', 
-        data: {onDelete: deleteElementById} 
+      return addEdge({
+        ...params,
+        type: 'button',
+        data: { onDelete: deleteElementById }
       }, els)
     });
 
@@ -70,7 +71,7 @@ const Panel = () => {
     console.log(newStateData);
     setElements((els) => updateEdge(oldEdge, newConnection, els));
   }
-  
+
   const onDragOver = (event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -91,7 +92,7 @@ const Panel = () => {
       id: newId,
       type,
       position,
-      data: { 
+      data: {
         id: newId,
         onDelete: deleteElementById,
         stateData: null,
@@ -125,7 +126,7 @@ const Panel = () => {
       setStateData(stateData);
 
       const edges = reactFlowInstance.getElements().filter(e => isEdge(e));
-      const connectedEdges = getConnectedEdges(targetElement, edges);        
+      const connectedEdges = getConnectedEdges(targetElement, edges);
       return removeElements([...targetElement, ...connectedEdges], els);
     }),
     [reactFlowInstance, stateData],
@@ -134,7 +135,7 @@ const Panel = () => {
   useEffect(() => {
     setElements(stateData.map(s => {
       return {
-        ...s, 
+        ...s,
         data: {
           id: s.id,
           onDelete: deleteElementById,
@@ -166,10 +167,10 @@ const Panel = () => {
               }
               // console.log(params);
               setElements((els) => {
-                return addEdge({ 
+                return addEdge({
                   ...params,
-                  type: 'button', 
-                  data: {onDelete: deleteElementById} 
+                  type: 'button',
+                  data: { onDelete: deleteElementById }
                 }, els)
               });
             })
@@ -183,15 +184,15 @@ const Panel = () => {
                   targetHandle: null
                 }
                 setElements((els) => {
-                  return addEdge({ 
+                  return addEdge({
                     ...params,
-                    type: 'button', 
-                    data: {onDelete: deleteElementById} 
+                    type: 'button',
+                    data: { onDelete: deleteElementById }
                   }, els)
-                });  
+                });
               }
             })
-          }    
+          }
         });
       }
     })
@@ -205,7 +206,7 @@ const Panel = () => {
             elements={elements}
             onConnect={onConnect}
             onElementsRemove={
-              (elementsToRemove) => 
+              (elementsToRemove) =>
                 setElements((els) => removeElements(elementsToRemove, els))
             }
             onEdgeUpdate={onEdgeUpdate}
@@ -222,6 +223,11 @@ const Panel = () => {
             }}
           >
             <Controls />
+            <Background
+              variant="lines"
+              gap={100}
+              size={2}
+            />
           </ReactFlow>
         </div>
         <Menu />
