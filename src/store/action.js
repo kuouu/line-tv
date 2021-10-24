@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_KEY = "eeb0a3a67ea2c64";
-const HWID = "015403fb6c";
+const HWID = "0154054369";
 
 export const upload = async (path) => {
   let formData = new FormData();

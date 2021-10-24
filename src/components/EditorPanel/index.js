@@ -13,13 +13,13 @@ import ReactFlow, {
 import Menu from './Menu';
 import State from '../State';
 import ButtonEdge from '../State/ButtonEdge';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getFSM, postFSM, deleteFSM } from '../../store/action';
 
 import './style.css';
 
-let startId = 1;
-const getId = () => `node_${startId++}`;
+const getId = () => `node_${uuidv4()}`;
 
 const Panel = () => {
   const reactFlowWrapper = useRef(null);
@@ -33,7 +33,6 @@ const Panel = () => {
       let sd = states.data.map(s => {
         return JSON.parse(s.data.replace('\\\"', '\"'));
       });
-      startId = sd.length;
       setStateData(sd);
     }
     getData();
@@ -139,6 +138,7 @@ const Panel = () => {
     });
 
     let newId = getId()
+    console.log(newId);
     const newNode = {
       id: newId,
       type: "node",
