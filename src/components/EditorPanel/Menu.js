@@ -16,7 +16,7 @@ const Menu = ({onGlobalSave}) => {
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'node')} draggable>
         Default Node
       </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'end')} draggable>
         Output Node
       </div>
       <Button onClick={onGlobalSave}>Save</Button>

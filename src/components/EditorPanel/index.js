@@ -14,7 +14,7 @@ import Menu from './Menu';
 import State from '../State';
 import ButtonEdge from '../State/ButtonEdge';
 
-import { getFSM, postFSM } from '../../store/action';
+import { getFSM, postFSM, deleteFSM } from '../../store/action';
 
 import './style.css';
 
@@ -25,6 +25,7 @@ const Panel = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [elements, setElements] = useState([]);
+  const [deletedNodeIds, setDeletedNodeIds] = useState([]);
   const [stateData, setStateData] = useState([]);
   useEffect(() => {
     const getData = async () => {
@@ -39,6 +40,11 @@ const Panel = () => {
   }, [])
   
   const onGlobalSave = () => {
+    // update deleted nodes
+    deletedNodeIds.forEach(d => {
+      deleteFSM(d);
+    })
+
     // update edges to deleted nodes
     let stateIds = stateData.map(sd => sd.id);
 
@@ -54,7 +60,7 @@ const Panel = () => {
         } else if (_s.type === "carousel") {
           _s.content.forEach((c, c_idx, arr) => {
             if (stateIds.indexOf(c.buttons[0].edgeTo) === -1) {
-              arr[c_idx].edgeTo = "";
+              arr[c_idx].buttons[0].edgeTo = "";
             }
           })
         }
@@ -179,14 +185,19 @@ const Panel = () => {
     (id) => setElements((els) => {
       const targetElement = els.filter(e => e.id === id);
       if (targetElement[0].type === "node") {
+        setDeletedNodeIds(ids => {
+          if (ids.indexOf(id) === -1) {
+            ids.push(id)
+            return ids;
+          }
+        });
+        console.log(deletedNodeIds);
         stateData.splice(stateData.findIndex(s => s.id === id), 1);
         setStateData(stateData);
         const edges = reactFlowInstance.getElements().filter(e => isEdge(e));
         const connectedEdges = getConnectedEdges(targetElement, edges);
         return removeElements([...targetElement, ...connectedEdges], els);  
       } else if (targetElement[0].type === "button") {
-        console.log(targetElement[0]);
-
         let sectionIdx = targetElement[0].sourceHandle.split('_')[0];
         let buttonIdx = targetElement[0].sourceHandle.split('_')[1];
         let newStateData = stateData;

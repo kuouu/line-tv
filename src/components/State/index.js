@@ -265,13 +265,6 @@ const State = ({data}) => {
                         onNewSection("carousel");
                       }}
                     />
-                    <ListItem
-                      title="Menu message"
-                      icon={BsGrid1X2}
-                      onClick={() => {
-                        onNewSection("menu");
-                      }}
-                    />
                   </SimpleGrid>
                 </AccordionPanel>
               </AccordionItem>
