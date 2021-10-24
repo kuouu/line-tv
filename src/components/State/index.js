@@ -113,7 +113,10 @@ const State = ({data}) => {
     <div style={nodeStyle}>
       <Handle type="target" position="left" style={dotStyle}/>
       <VStack 
-        onClick={onOpen} 
+        onContextMenu={(event) => {
+          event.preventDefault()
+          onOpen()
+        }} 
         onMouseUp={(event) => {
           onSetPosition(event.clientX, event.clientY);
         }}
