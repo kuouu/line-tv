@@ -50,6 +50,7 @@ const State = ({data}) => {
       title,
       sections
     });
+    onClose();
     onSaveState(sections, title);
   }
 
