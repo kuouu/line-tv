@@ -18,8 +18,9 @@ const TextSection = ({ data, onEdit, editHandler }) => {
         text: "new button",
         edgeTo: ""
       }
-      editHandler(["buttons"], [[...bs, newBtn]]);
-      return [...bs, newBtn];
+      const newBtns = (bs === undefined ? [newBtn]: [...bs, newBtn])
+      editHandler(["buttons"], [newBtns]);
+      return newBtns;
     });
   }
   return (
