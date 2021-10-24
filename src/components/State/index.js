@@ -106,7 +106,7 @@ const State = ({ data }) => {
 
   return (
     <div style={nodeStyle}>
-      <Handle type="target" position="left" style={dotStyle}/>
+      <Handle type="target" position="left" style={dotStyle} />
       <VStack onClick={onOpen}>
         <Flex width="100%" alignItems="center">
           <Box padding="0 8px" fontWeight='bold' color='#282c34'>{title}</Box>
@@ -175,11 +175,12 @@ const State = ({ data }) => {
                           >
                             <Box
                               p="6px 10px"
+                              m='10px 0'
                               _hover={{ bg: '#EDF2F7', transition: '0.3s', borderRadius: '6px' }}
                               role="group"
                               key={idx}
                             >
-                              <Flex width="100%" alignItems="center" justifyContent="space-between">
+                              <Flex width="100%" alignItems="center" justifyContent="space-between" mb={3}>
                                 <Flex alignItems="center">
                                   <Text fontSize="sm" {...provided.dragHandleProps}>
                                     <Icon as={MdOutlineDragIndicator} width="0px" style={{ transition: '0.2s' }} _groupHover={{ width: '12px' }} />
