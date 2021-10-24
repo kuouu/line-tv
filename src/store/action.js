@@ -55,6 +55,8 @@ export const postStoreInfo = async (data) => {
     return res.data;
   } catch (e) {
     console.log(e)
+  }
+}
 export const getFSM = async (hwid = HWID) => {
   try {
     let res = await axios({
