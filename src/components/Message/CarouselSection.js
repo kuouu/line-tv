@@ -8,15 +8,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
   const contents = data.content;
   const ImagePlaceHolder = () => {
     const id = `imgupload_${uuidv4()}`;
-    return <Flex
-      minW='300px'
-      h='300px'
-      justify='center'
-      align='center'
-      bgColor='rgba(255, 255, 255, 0.5)'
-      borderRadius='5px'
-      cursor='pointer'
-    >
+    return <Flex>
       {onEdit && <input
         style={{ width: 0, opacity: 0 }}
         display='none'
@@ -36,7 +28,18 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
           editHandler(["content"], [newContent]);
         }} />}
       <label htmlFor={id}>
-        <MdAddCircleOutline fontSize='40px' cursor='pointer' />
+        <Flex
+          minW='300px'
+          h='300px'
+          justify='center'
+          align='center'
+          bgColor='rgba(255, 255, 255, 0.5)'
+          borderRadius='5px'
+          cursor='pointer'
+          _hover={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}
+        >
+          <MdAddCircleOutline fontSize='40px' cursor='pointer' />
+        </Flex>
       </label>
     </Flex>
   }
@@ -54,6 +57,7 @@ export default function CarouselSection({ data, onEdit, editHandler }) {
           position='relative'
           overflow='hidden'
           bgColor='rgba(255, 255, 255, 0.5)'
+          _hover={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}
         >
           {onEdit && <input
             style={{ height: 0, opacity: 0 }}
