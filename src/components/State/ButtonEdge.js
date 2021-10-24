@@ -32,7 +32,7 @@ const ButtonEdge = ({
     targetY,
     targetPosition,
   });
-  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
+  const markerEnd = getMarkerEnd("arrowclosed", markerEndId);
   const [edgeCenterX, edgeCenterY] = getEdgeCenter({
     sourceX,
     sourceY,
