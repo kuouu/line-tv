@@ -30,7 +30,7 @@ export const getStoreInfo = async () => {
   try {
     let res = await axios({
       method: 'get',
-      url: 'http://34.80.76.67:8000/shops/1',
+      url: `${process.env.REACT_APP_API_URL}/shops/1`,
       headers: {
         'Content-type': 'application/json'
       },
@@ -46,7 +46,7 @@ export const postStoreInfo = async (data) => {
   try {
     let res = await axios({
       method: 'post',
-      url: 'http://34.80.76.67:8000/shops',
+      url: `${process.env.REACT_APP_API_URL}/shops`,
       data,
       headers: {
         'Content-type': 'application/json'
@@ -61,7 +61,7 @@ export const getFSM = async (hwid = HWID) => {
   try {
     let res = await axios({
       method: "GET",
-      url: `http://34.80.76.67:8000/fsm/${hwid}`,
+      url: `${process.env.REACT_APP_API_URL}/fsm/${hwid}`,
     });
     return res;
   } catch (e) {
@@ -73,7 +73,7 @@ export const postFSM = async (node_id, data, hwid = HWID) => {
   try {
     await axios({
       method: "POST",
-      url: 'http://34.80.76.67:8000/fsm/node',
+      url: `${process.env.REACT_APP_API_URL}/fsm/node`,
       data: {
         hwid,
         node_id,
@@ -89,7 +89,7 @@ export const deleteFSM = async (node_id, hwid = HWID) => {
   try {
     await axios({
       method: "DELETE",
-      url: 'http://34.80.76.67:8000/fsm/node',
+      url:  `${process.env.REACT_APP_API_URL}/fsm/node`,
       data: {
         hwid,
         node_id
